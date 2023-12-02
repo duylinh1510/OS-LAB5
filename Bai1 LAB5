@@ -16,7 +16,7 @@ void *p1(){
         sem_wait(&sem);
         sells++;
         printf("Sells: %d\n", sells);
-        usleep(1);
+        sleep(2);
     }
 }
 
@@ -25,7 +25,7 @@ void *p2(){
         products++;
         printf("Products: %d\n", products);
         sem_post(&sem);
-        usleep(1);
+        sleep(1);
     }
 }
 
