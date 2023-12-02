@@ -1,0 +1,39 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <semaphore.h>
+
+pthread_t tid[2];
+sem_t sem;
+int sells=0;
+int products=0;
+int MSSV=780; //MSSV là 22520780
+
+void *p1(){
+    while(sells<=products)
+    {
+        sem_wait(&sem);
+        sells++;
+        printf("Sells: %d\n", sells);
+        usleep(1);
+    }
+}
+
+void *p2(){
+    while(products <= sells + MSSV){
+        products++;
+        printf("Products: %d\n", products);
+        sem_post(&sem);
+        usleep(1);
+    }
+}
+
+int main(){
+    sem_init(&sem, 0,0);
+    pthread_create(&tid[1],NULL,&p1,NULL);
+    pthread_create(&tid[0],NULL,&p2,NULL);
+    pthread_join(tid[1],NULL);
+    pthread_join(tid[0],NULL);
+    return 0;
+}
